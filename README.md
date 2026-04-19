@@ -20,6 +20,10 @@ git clone https://github.com/yourusername/AGS10_RPi.git
 cd AGS10_RPi
 pip install .
 ```
+Or install directly from source:
+```
+python setup.py install
+```
 
 ## 🧪 Example Usage
 ```
