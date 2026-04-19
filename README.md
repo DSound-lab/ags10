@@ -5,6 +5,7 @@ AGS10 — TVOC Sensor library for python
 ## 📦 Overview
 This Python module provides a clean, Linux-compatible driver for the **AGS10 volatile organic compound (VOC) sensor**. It was originally ported from the MicroPython implementation by Gavesha Labs, and uses **smbus2** for I²C communication. It was tested to run on **Raspberry Pi 3/4** under **Raspbian Bullseye/Bookworm** with Python 3.
 
+Known working hardware module: https://paradisetronic.com/products/ags10-tvoc-luftqualitats-sensor-breakout-board-kalibrierter-i2c-gassensor-3-3v-5v-qwiic-stemma-qt-kompatibel
 ---
 
 ## 🧩 Features
