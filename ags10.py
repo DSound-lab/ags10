@@ -21,19 +21,30 @@ class AGS10:
         self._rbuf_read_time = 0
         self._init_time = time.time()
         self._validate = validate_crc
+        self._version = [0] * 5
+
+    def _read_version(self):
+        self._version = self.bus.read_i2c_block_data(self.address,0x11,5)
+        
 
     def _read_to_dbuf(self):
+        if time.time() - self._dbuf_read_time < 2:
+            # min 1.5s delay is required between successive resistance reads
+            return
         self._dbuf = self.bus.read_i2c_block_data(self.address, 0x00, 5)
         self._dbuf_read_time = time.time()
 
     def _read_to_rbuf(self):
-        self._rbuf = self.bus.read_i2c_block_data(self.address, 0x0A, 5)
+        if time.time() - self._rbuf_read_time < 2:
+            # min 1.5s delay is required between successive resistance reads
+            return
+        self._rbuf = self.bus.read_i2c_block_data(self.address, 0x20, 5)
         self._rbuf_read_time = time.time()
 
     @staticmethod
     def _calc_crc8(data):
         crc = 0xFF
-        for byte in data[:4]:
+        for byte in data:
             crc ^= byte
             for _ in range(8):
                 if crc & 0x80:
@@ -41,6 +52,11 @@ class AGS10:
                 else:
                     crc = (crc << 1) & 0xFF
         return crc
+
+    @property
+    def version(self):
+        self._read_version()
+        return self._version
 
     @property
     def status(self):
@@ -66,10 +82,10 @@ class AGS10:
         return int.from_bytes(self._rbuf[1:4], 'big') * 0.1
 
     def set_baseline(self, baseline_value):
-        data = list(baseline_value.to_bytes(3, 'big'))
+        data = list(baseline_value.to_bytes(2, 'big'))
         crc = self._calc_crc8(data + [0x00])
-        payload = data + [crc]
-        self.bus.write_i2c_block_data(self.address, 0x20, payload)
+        payload = [0, 0x0C, data[0], data[1], crc]
+        self.bus.write_i2c_block_data(self.address, 0x01, bytearray(payload))
 
     def close(self):
         self.bus.close()
