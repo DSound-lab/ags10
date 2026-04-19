@@ -28,6 +28,7 @@ python setup.py install
 ## 🧪 Example Usage
 ```
 from ags10_rpi import AGS10
+import time
 
 sensor = AGS10(busnum=1, address=0x1A, validate_crc=True)
 
