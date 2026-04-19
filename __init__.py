@@ -1,0 +1,2 @@
+from .ags10 import AGS10, AGS10_I2C_ADDR_DEFAULT
+__all__ = ["AGS10", "AGS10_I2C_ADDR_DEFAULT"]
