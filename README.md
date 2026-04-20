@@ -18,7 +18,7 @@ https://paradisetronic.com/products/ags10-tvoc-luftqualitats-sensor-breakout-boa
 
 ## 🛠️ Installation
 ```
-git clone https://github.com/DSound-lab/AGS10ags10.git
+git clone https://github.com/DSound-lab/ags10.git
 cd ags10
 pip install .
 ```
