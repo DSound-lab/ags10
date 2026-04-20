@@ -87,5 +87,9 @@ class AGS10:
         payload = [0, 0x0C, data[0], data[1], crc]
         self.bus.write_i2c_block_data(self.address, 0x01, bytearray(payload))
 
+    def set_baseline_factorydefault(self):
+        payload = [0x00,0x0C,0xFF,0xFF,0x81]
+        self.bus.write_i2c_block_data(self.address, 0x01, bytearray(payload))
+
     def close(self):
         self.bus.close()
