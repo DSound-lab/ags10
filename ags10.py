@@ -82,7 +82,7 @@ class AGS10:
         return int.from_bytes(self._rbuf[1:4], 'big') * 0.1
 
     def set_baseline(self, baseline_value):
-        data = list(baseline_value.to_bytes(2, 'big'))
+        data = list(int(baseline_value*0.1).to_bytes(2, 'big'))
         crc = self._calc_crc8(data + [0x00])
         payload = [0, 0x0C, data[0], data[1], crc]
         self.bus.write_i2c_block_data(self.address, 0x01, bytearray(payload))
@@ -90,6 +90,13 @@ class AGS10:
     def set_baseline_factorydefault(self):
         payload = [0x00,0x0C,0xFF,0xFF,0x81]
         self.bus.write_i2c_block_data(self.address, 0x01, bytearray(payload))
+
+    def update_address(self, new_addr):
+        new_addr_inv = ~new_addr & 0xFF
+        buf = [new_addr, new_addr_inv, new_addr, new_addr_inv]
+        crc = self._calc_crc8(buf)
+        buf = [new_addr, new_addr_inv, new_addr, new_addr_inv, crc]
+        self.bus.write_i2c_block_data(self.address, 0x21, bytearray(buf))
 
     def close(self):
         self.bus.close()
